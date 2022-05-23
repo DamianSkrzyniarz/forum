@@ -44,4 +44,26 @@ public class UserController {
         EntityModel<User> entityModel = assembler.toModel(repository.save(newUser));
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
+
+    @PutMapping("/users/{id}")
+    ResponseEntity<?> replaceEmployee(@RequestBody User newUser, @PathVariable Long id){
+        User updatedEmployee = repository.findById(id)
+                .map(employee -> {
+                    employee.setName(newUser.getName());
+                    return repository.save(employee);
+                })
+                .orElseGet(() -> {
+                    newUser.setId(id);
+                    return repository.save(newUser);
+                });
+        EntityModel<User> entityModel = assembler.toModel(updatedEmployee);
+        return ResponseEntity
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+    }
+
+    @DeleteMapping("/users/{id}")
+    ResponseEntity<?> deleteUser(@PathVariable Long id){
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
