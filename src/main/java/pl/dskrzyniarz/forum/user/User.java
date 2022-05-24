@@ -1,9 +1,10 @@
 package pl.dskrzyniarz.forum.user;
 
-import javax.persistence.Id;
+import pl.dskrzyniarz.forum.post.Post;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
+import javax.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class User {
@@ -11,6 +12,9 @@ public class User {
 
     private @Id @GeneratedValue Long id;
     private String name;
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts;
 
     public User() {
     }
