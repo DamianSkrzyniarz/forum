@@ -5,8 +5,10 @@
     <title>Messages</title>
 </head>
 <body>
-    <tr th:each="message : ${messages}">
-        <td th:text="${message.body}"></td>
-    </tr>
+    <table th:each="message : ${messages}">
+        <tr>
+            <td th:text="${message.body}"></td>
+        </tr>
+    </table>
 </body>
 </html>
