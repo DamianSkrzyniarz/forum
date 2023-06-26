@@ -2,14 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New Message</title>
+    <title th:text="${topic.title}">asd</title>
 </head>
 <body>
-<h1>New Message</h1>
-<form action="#" th:action="@{/message/new}" th:object="${message}" method="post">
-    <label>Message:</label>
-    <input type="text" th:field="*{body}"/><br/>
-
+<h1 th:text="${topic.title}"></h1>
+<h2> New message</h2>
+<form th:object="${message}" action="#" th:action="@{|/${topic.id}/new|}" method="post">
+    <label>Message:
+        <input type="text" th:value="*{body}" name="body"/>
+    </label>
     <button type="submit">Send</button>
 </form>
 </body>
