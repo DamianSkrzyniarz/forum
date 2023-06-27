@@ -3,6 +3,8 @@ package pl.dskrzyniarz.forum.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 public class Message {
@@ -15,4 +17,5 @@ public class Message {
     private Topic topic;
     @Column(length=1024)
     private String body;
+    private LocalDateTime dateCreated;
 }

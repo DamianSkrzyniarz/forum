@@ -2,16 +2,20 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/darkly/bootstrap.min.css" integrity="sha384-nNK9n28pDUDDgIiIqZ/MiyO3F4/9vsMtReZK39klb/MtkZI3/LtjSjlmyVPS3KdN" crossorigin="anonymous">
     <title th:text="${topic.title}">asd</title>
 </head>
 <body>
-<h1 th:text="${topic.title}"></h1>
-<h2> New message</h2>
-<form th:object="${message}" action="#" th:action="@{|/${topic.id}/new|}" method="post">
+<div class="container">
+<h3 th:text="${topic.title}"></h3>
+<h4> New message</h4>
+<form action="#" th:action="@{|/${topic.id}/new|}" method="post">
     <label>Message:
-        <input type="text" th:value="*{body}" name="body"/>
+        <label for="body" class="form-label">Message</label>
+        <input type="textarea" rows="6" th:value="${message.body}" name="body" id ="body" class="form-control"/><br/>
     </label>
-    <button type="submit">Send</button>
+    <button type="submit" class="btn btn-primary">Send</button>
 </form>
+</div>
 </body>
 </html>

@@ -12,6 +12,8 @@ import pl.dskrzyniarz.forum.entity.Topic;
 import pl.dskrzyniarz.forum.repository.MessageRepository;
 import pl.dskrzyniarz.forum.repository.TopicRepository;
 
+import java.time.LocalDateTime;
+
 @Controller
 public class TopicController {
 
@@ -42,6 +44,7 @@ public class TopicController {
                               @ModelAttribute Message message){
         topicRepository.save(topic);
         message.setTopic(topic);
+        message.setDateCreated(LocalDateTime.now());
         messageRepository.save(message);
         return "redirect:/" + topic.getId();
     }
