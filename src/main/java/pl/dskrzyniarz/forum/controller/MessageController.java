@@ -17,12 +17,6 @@ public class MessageController {
     @Autowired
     private TopicRepository topicRepository;
 
-    @GetMapping("/message/all")
-    public String getAllMessages(Model model){
-        model.addAttribute("messages", messageRepository.findAll());
-        return "messages";
-    }
-
     @GetMapping("/{topicId}/new")
     public String newMessageForm(Model model,
                                  @PathVariable int topicId){
@@ -39,7 +33,7 @@ public class MessageController {
         Topic topic = topicRepository.findById(topicId).get();
         message.setTopic(topic);
         messageRepository.save(message);
-        return "success";
+        return "redirect:/" + topic.getId();
     }
 
 }

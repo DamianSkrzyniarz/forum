@@ -43,7 +43,7 @@ public class TopicController {
         topicRepository.save(topic);
         message.setTopic(topic);
         messageRepository.save(message);
-        return "success";
+        return "redirect:/" + topic.getId();
     }
 
 }

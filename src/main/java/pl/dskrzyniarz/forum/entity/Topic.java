@@ -15,7 +15,4 @@ public class Topic {
     @OneToMany(mappedBy="topic")
     private List<Message> messages;
 
-    public void addMessage(Message message){
-        messages.add(message);
-    }
 }
