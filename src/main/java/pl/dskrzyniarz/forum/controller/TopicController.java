@@ -23,6 +23,11 @@ public class TopicController {
     private MessageRepository messageRepository;
 
 
+    @GetMapping("/")
+    public String readTopics(Model model){
+        model.addAttribute("topics", topicRepository.findAll());
+        return "home";
+    }
     @GetMapping("/{topicId}")
     public String getMessagesInTopic(@PathVariable int topicId,
                                      Model model){
