@@ -9,6 +9,11 @@
 <body>
 <div class="container">
     <h1>Forum</h1>
+    <div class="container">
+    <form th:action="@{/search}" method="post" class="d-flex flex-row-reverse form-main">
+        <input type="text" id="search" name="searchedPhrase" placeholder="search" class="form-control input-search w-25"/>
+    </form>
+    </div>
     <table th:each="topic : ${topics}" class="table table-striped w-auto">
         <tr>
             <td class="w-75"><a th:href="@{|/${topic.id}|}" th:text="${topic.title}"></a></td>

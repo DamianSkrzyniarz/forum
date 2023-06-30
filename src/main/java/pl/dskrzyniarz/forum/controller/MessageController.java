@@ -10,6 +10,7 @@ import pl.dskrzyniarz.forum.repository.MessageRepository;
 import pl.dskrzyniarz.forum.repository.TopicRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 public class MessageController {
@@ -67,6 +68,14 @@ public class MessageController {
         existingMessage.setBody(editedMessage.getBody());
         messageRepository.save(existingMessage);
         return "redirect:/" + existingMessage.getTopic().getId();
+    }
+
+    @PostMapping("/search")
+    public String showSearchResults(Model model,
+                                    @RequestParam String searchedPhrase){
+        List<Message> messages = messageRepository.findByBodyContaining(searchedPhrase);
+        model.addAttribute("messages", messages);
+        return "search-results";
     }
 
 }

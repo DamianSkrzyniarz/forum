@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/darkly/bootstrap.min.css" integrity="sha384-nNK9n28pDUDDgIiIqZ/MiyO3F4/9vsMtReZK39klb/MtkZI3/LtjSjlmyVPS3KdN" crossorigin="anonymous">
+    <title>Search results</title>
+</head>
+<body>
+<div class="container">
+    <h1>Search results</h1>
+    <table th:each="message : ${messages}" class="table table-striped w-auto">
+        <tr>
+            <td th:text="${#temporals.format(message.dateCreated, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${message.body}" class="text-left w-100"></td>
+            <td><a th:href="@{|/${message.topic.id}|}">View topic</a></td>
+        </tr>
+    </table>
+    <a th:href="@{/}">Back</a>
+</div>
+</body>
+</html>
+</html>
