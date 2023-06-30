@@ -24,12 +24,12 @@ public class TopicController {
 
 
     @GetMapping("/")
-    public String readTopics(Model model){
+    public String allTopics(Model model){
         model.addAttribute("topics", topicRepository.findAll());
         return "home";
     }
     @GetMapping("/{topicId}")
-    public String getMessagesInTopic(@PathVariable int topicId,
+    public String showTopic(@PathVariable int topicId,
                                      Model model){
 
         Topic topic = topicRepository.findById(topicId).get();
@@ -38,14 +38,14 @@ public class TopicController {
     }
 
     @GetMapping("/new")
-    public String newTopicForm(Model model){
+    public String showTopicForm(Model model){
         model.addAttribute("topic", new Topic());
         model.addAttribute("message", new Message());
-        return "topicform";
+        return "topic-form";
     }
 
     @PostMapping("/new")
-    public String submitTopic(@ModelAttribute Topic topic,
+    public String saveTopic(@ModelAttribute Topic topic,
                               @ModelAttribute Message message){
         topicRepository.save(topic);
         message.setTopic(topic);
@@ -53,5 +53,31 @@ public class TopicController {
         messageRepository.save(message);
         return "redirect:/" + topic.getId();
     }
+
+    @GetMapping("/{topicId}/delete")
+    public String deleteTopic(@PathVariable int topicId){
+        Topic existingTopic = topicRepository.findById(topicId).get();
+        messageRepository.deleteAll(existingTopic.getMessages());
+        topicRepository.delete(existingTopic);
+        return "redirect:/";
+    }
+    @GetMapping("/{topicId}/edit")
+    public String showTopicEditForm(@PathVariable int topicId,
+                              Model model){
+        Topic existingTopic = topicRepository.findById(topicId).get();
+        System.out.println(existingTopic.getId());
+        model.addAttribute("topic", existingTopic);
+        return "topic-form-edit";
+    }
+    @PostMapping("/{topicId}/edit")
+    public String updateTopic(@PathVariable int topicId,
+                              @ModelAttribute Topic editedTopic){
+        Topic existingTopic = topicRepository.findById(topicId).get();
+        existingTopic.setTitle(editedTopic.getTitle());
+        topicRepository.save(existingTopic);
+        return "redirect:/" + topicId;
+    }
+
+
 
 }

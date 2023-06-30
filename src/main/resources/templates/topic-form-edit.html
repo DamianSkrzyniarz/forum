@@ -8,12 +8,10 @@
 <body>
 <div class="container">
 <h3>New Topic</h3>
-<form action="#" th:action="@{/new}" method="post">
+<form action="#" th:action="@{|/${topic.id}/edit|}" method="post">
     <label for="title" class="form-label">Title:</label>
         <input type="text" class="form-control" th:value="${topic.title}" name="title" id ="title" /><br/>
-    <label for="body" class="form-label">Message</label>
-        <input type="textarea" rows="6" th:value="${message.body}" name="body" id ="body" class="form-control"/><br/>
-    <button type="submit" class="btn btn-primary">Send</button>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
 </div>
 </body>

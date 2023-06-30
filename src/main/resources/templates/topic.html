@@ -12,6 +12,8 @@
             <tr>
                 <td th:text="${#temporals.format(message.dateCreated, 'dd-MM-yyyy HH:mm')}"></td>
                 <td th:text="${message.body}" class="text-left w-100"></td>
+                <td><a th:href="@{|/message/${message.id}/edit|}">edit</a></td>
+                <td><a th:href="@{|/message/${message.id}/delete|}">delete</a></td>
             </tr>
         </table>
         <a th:href="@{|/${topic.id}/new|}">New message</a><br>

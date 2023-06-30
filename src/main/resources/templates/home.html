@@ -11,7 +11,11 @@
     <h1>Forum</h1>
     <table th:each="topic : ${topics}" class="table table-striped w-auto">
         <tr>
-            <td><a th:href="@{|/${topic.id}|}" th:text="${topic.title}"></a></td>
+            <td class="w-75"><a th:href="@{|/${topic.id}|}" th:text="${topic.title}"></a></td>
+            <td th:text="${#temporals.format(topic.getLastMessageDate(), 'dd-MM-yyyy HH:mm')}"></td>
+            <td><a th:href="@{|/${topic.id}/edit|}">edit</a></td>
+            <td><a th:href="@{|/${topic.id}/delete|}">delete</a></td>
+
         </tr>
     </table>
     <a th:href="@{/new}">New topic</a><br>

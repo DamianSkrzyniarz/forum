@@ -20,16 +20,15 @@ public class MessageController {
     private TopicRepository topicRepository;
 
     @GetMapping("/{topicId}/new")
-    public String newMessageForm(Model model,
+    public String showMessageForm(Model model,
                                  @PathVariable int topicId){
         model.addAttribute("message", new Message());
         Topic topic = topicRepository.findById(topicId).get();
         model.addAttribute("topic", topic);
-        return "messageform";
+        return "message-form";
     }
-
     @PostMapping("/{topicId}/new")
-    public String submitMessage(@ModelAttribute Message message,
+    public String saveMessage(@ModelAttribute Message message,
                                 @PathVariable int topicId){
 
         Topic topic = topicRepository.findById(topicId).get();
@@ -37,6 +36,37 @@ public class MessageController {
         message.setDateCreated(LocalDateTime.now());
         messageRepository.save(message);
         return "redirect:/" + topic.getId();
+    }
+
+    @GetMapping("/message/{messageId}/delete")
+    public String deleteMessage(@PathVariable int messageId){
+        Message existingMessage = messageRepository.findById(messageId).get();
+        int topicId = existingMessage.getTopic().getId();
+        messageRepository.delete(existingMessage);
+        Topic existingTopic = topicRepository.findById(topicId).get();
+        if(existingTopic.getMessages().size()==0){ //delete topic if there's no other messages
+            topicRepository.delete(existingTopic);
+            return "redirect:/";
+        }
+        else {
+            return "redirect:/" + existingTopic.getId();
+        }
+    }
+    @GetMapping("/message/{messageId}/edit")
+    public String showMessageEditForm(Model model,
+                                  @PathVariable int messageId){
+        Message existingMessage = messageRepository.findById(messageId).get();
+        model.addAttribute("message", existingMessage);
+        return "message-form-edit";
+    }
+
+    @PostMapping("/message/{messageId}/edit")
+    public String updateMessage(@PathVariable int messageId,
+                              @ModelAttribute Message editedMessage){
+        Message existingMessage = messageRepository.findById(messageId).get();
+        existingMessage.setBody(editedMessage.getBody());
+        messageRepository.save(existingMessage);
+        return "redirect:/" + existingMessage.getTopic().getId();
     }
 
 }
