@@ -65,7 +65,6 @@ public class TopicController {
     public String showTopicEditForm(@PathVariable int topicId,
                               Model model){
         Topic existingTopic = topicRepository.findById(topicId).get();
-        System.out.println(existingTopic.getId());
         model.addAttribute("topic", existingTopic);
         return "topic-form-edit";
     }
