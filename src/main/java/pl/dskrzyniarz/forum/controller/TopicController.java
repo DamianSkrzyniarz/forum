@@ -77,6 +77,4 @@ public class TopicController {
         return "redirect:/" + topicId;
     }
 
-
-
 }
