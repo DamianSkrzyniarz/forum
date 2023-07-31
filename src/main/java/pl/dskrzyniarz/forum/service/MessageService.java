@@ -23,8 +23,7 @@ public class MessageService {
     }
 
     public void deleteMessage(int id){
-        Message message = messageRepository.findById(id).get();
-        messageRepository.delete(message);
+        messageRepository.deleteById(id);
     }
 
     public Message editMessage(Message newMessage, int id){

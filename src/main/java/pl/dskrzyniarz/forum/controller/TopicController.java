@@ -76,7 +76,5 @@ public class TopicController {
         topicRepository.save(existingTopic);
         return "redirect:/" + topicId;
     }
-
-
-
+    
 }
