@@ -8,6 +8,8 @@ import pl.dskrzyniarz.forum.entity.Message;
 import pl.dskrzyniarz.forum.entity.Topic;
 import pl.dskrzyniarz.forum.repository.MessageRepository;
 import pl.dskrzyniarz.forum.repository.TopicRepository;
+import pl.dskrzyniarz.forum.service.MessageService;
+import pl.dskrzyniarz.forum.service.TopicService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,15 +18,15 @@ import java.util.List;
 public class MessageController {
 
     @Autowired
-    private MessageRepository messageRepository;
+    private MessageService messageService;
     @Autowired
-    private TopicRepository topicRepository;
+    private TopicService topicService;
 
     @GetMapping("/{topicId}/new")
     public String showMessageForm(Model model,
                                  @PathVariable int topicId){
         model.addAttribute("message", new Message());
-        Topic topic = topicRepository.findById(topicId).get();
+        Topic topic = topicService.getTopic(topicId);
         model.addAttribute("topic", topic);
         return "message-form";
     }
@@ -32,21 +34,20 @@ public class MessageController {
     public String saveMessage(@ModelAttribute Message message,
                                 @PathVariable int topicId){
 
-        Topic topic = topicRepository.findById(topicId).get();
+        Topic topic = topicService.getTopic(topicId);
         message.setTopic(topic);
         message.setDateCreated(LocalDateTime.now());
-        messageRepository.save(message);
+        messageService.saveMessage(message);
         return "redirect:/" + topic.getId();
     }
 
     @GetMapping("/message/{messageId}/delete")
     public String deleteMessage(@PathVariable int messageId){
-        Message existingMessage = messageRepository.findById(messageId).get();
-        int topicId = existingMessage.getTopic().getId();
-        messageRepository.delete(existingMessage);
-        Topic existingTopic = topicRepository.findById(topicId).get();
-        if(existingTopic.getMessages().size()==0){ //delete topic if there's no other messages
-            topicRepository.delete(existingTopic);
+        int topicId = messageService.getMessage(messageId).getTopic().getId();
+        messageService.deleteMessage(messageId);
+        Topic existingTopic = topicService.getTopic(topicId);
+        if(existingTopic.getMessages().isEmpty()){ //delete topic if there's no other messages
+            topicService.deleteTopic(topicId);
             return "redirect:/";
         }
         else {
@@ -56,7 +57,7 @@ public class MessageController {
     @GetMapping("/message/{messageId}/edit")
     public String showMessageEditForm(Model model,
                                   @PathVariable int messageId){
-        Message existingMessage = messageRepository.findById(messageId).get();
+        Message existingMessage = messageService.getMessage(messageId);
         model.addAttribute("message", existingMessage);
         return "message-form-edit";
     }
@@ -64,16 +65,14 @@ public class MessageController {
     @PostMapping("/message/{messageId}/edit")
     public String updateMessage(@PathVariable int messageId,
                               @ModelAttribute Message editedMessage){
-        Message existingMessage = messageRepository.findById(messageId).get();
-        existingMessage.setBody(editedMessage.getBody());
-        messageRepository.save(existingMessage);
-        return "redirect:/" + existingMessage.getTopic().getId();
+        Message originalMessage = messageService.editMessage(editedMessage, messageId);
+        return "redirect:/" + originalMessage.getTopic().getId();
     }
 
     @PostMapping("/search")
     public String showSearchResults(Model model,
                                     @RequestParam String searchedPhrase){
-        List<Message> messages = messageRepository.findByBodyContaining(searchedPhrase);
+        List<Message> messages = messageService.searchMessages(searchedPhrase);
         model.addAttribute("messages", messages);
         return "search-results";
     }

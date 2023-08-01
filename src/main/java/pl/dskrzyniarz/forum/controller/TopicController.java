@@ -11,6 +11,8 @@ import pl.dskrzyniarz.forum.entity.Message;
 import pl.dskrzyniarz.forum.entity.Topic;
 import pl.dskrzyniarz.forum.repository.MessageRepository;
 import pl.dskrzyniarz.forum.repository.TopicRepository;
+import pl.dskrzyniarz.forum.service.MessageService;
+import pl.dskrzyniarz.forum.service.TopicService;
 
 import java.time.LocalDateTime;
 
@@ -18,21 +20,21 @@ import java.time.LocalDateTime;
 public class TopicController {
 
     @Autowired
-    private TopicRepository topicRepository;
+    private TopicService topicService;
     @Autowired
-    private MessageRepository messageRepository;
+    private MessageService messageService;
 
 
     @GetMapping("/")
     public String allTopics(Model model){
-        model.addAttribute("topics", topicRepository.findAll());
+        model.addAttribute("topics", topicService.getAllTopics());
         return "home";
     }
     @GetMapping("/{topicId}")
     public String showTopic(@PathVariable int topicId,
                                      Model model){
 
-        Topic topic = topicRepository.findById(topicId).get();
+        Topic topic = topicService.getTopic(topicId);
         model.addAttribute("topic",topic);
         return "topic";
     }
@@ -47,34 +49,33 @@ public class TopicController {
     @PostMapping("/new")
     public String saveTopic(@ModelAttribute Topic topic,
                               @ModelAttribute Message message){
-        topicRepository.save(topic);
+        topicService.saveTopic(topic);
         message.setTopic(topic);
         message.setDateCreated(LocalDateTime.now());
-        messageRepository.save(message);
+        messageService.saveMessage(message);
         return "redirect:/" + topic.getId();
     }
 
     @GetMapping("/{topicId}/delete")
     public String deleteTopic(@PathVariable int topicId){
-        Topic existingTopic = topicRepository.findById(topicId).get();
-        messageRepository.deleteAll(existingTopic.getMessages());
-        topicRepository.delete(existingTopic);
+        messageService.deleteAllInTopic(topicService.getTopic(topicId));
+        topicService.deleteTopic(topicId);
         return "redirect:/";
     }
     @GetMapping("/{topicId}/edit")
     public String showTopicEditForm(@PathVariable int topicId,
                               Model model){
-        Topic existingTopic = topicRepository.findById(topicId).get();
+        Topic existingTopic = topicService.getTopic(topicId);
         model.addAttribute("topic", existingTopic);
         return "topic-form-edit";
     }
     @PostMapping("/{topicId}/edit")
     public String updateTopic(@PathVariable int topicId,
                               @ModelAttribute Topic editedTopic){
-        Topic existingTopic = topicRepository.findById(topicId).get();
+        Topic existingTopic = topicService.getTopic(topicId);
         existingTopic.setTitle(editedTopic.getTitle());
-        topicRepository.save(existingTopic);
+        topicService.saveTopic(existingTopic);
         return "redirect:/" + topicId;
     }
-    
+
 }

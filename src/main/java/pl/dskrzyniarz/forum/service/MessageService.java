@@ -3,6 +3,7 @@ package pl.dskrzyniarz.forum.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.dskrzyniarz.forum.entity.Message;
+import pl.dskrzyniarz.forum.entity.Topic;
 import pl.dskrzyniarz.forum.repository.MessageRepository;
 
 import java.util.List;
@@ -37,5 +38,9 @@ public class MessageService {
 
     public List<Message> searchMessages(String searchedPhrase){
         return messageRepository.findByBodyContaining(searchedPhrase);
+    }
+
+    public void deleteAllInTopic(Topic topic){
+        messageRepository.deleteAll(topic.getMessages());
     }
 }
