@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/darkly/bootstrap.min.css" integrity="sha384-nNK9n28pDUDDgIiIqZ/MiyO3F4/9vsMtReZK39klb/MtkZI3/LtjSjlmyVPS3KdN" crossorigin="anonymous">
+    <title>Register</title>
+</head>
+<body>
+<div class="container p-3">
+    <h4>Register</h4>
+    <form action="#" th:action="@{/register}" method="post">
+        <label for="username" class="form-label">Username</label>
+        <input th:value="${user.username}" name="username" id ="username" class="form-control"></input><br/>
+
+        <label for="email" class="form-label">Email</label>
+        <input th:value="${user.email}" name="email" id ="email" class="form-control"></input><br/>
+
+        <label for="password" class="form-label">Password</label>
+        <input type="password" th:value="${user.password}" name="password" id ="password" class="form-control"></input><br/>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</div>
+</body>
+</html>
