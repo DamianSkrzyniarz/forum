@@ -27,8 +27,8 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public Message editMessage(Message newMessage, int id){
-        Message oldMessage = messageRepository.findById(id).get();
+    public Message editMessage(Message newMessage, int messageId){
+        Message oldMessage = messageRepository.findById(messageId).get();
         oldMessage.setBody(newMessage.getBody());
         return messageRepository.save(oldMessage);
     }
