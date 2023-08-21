@@ -21,4 +21,6 @@ public class Message {
     @NotEmpty
     private String body;
     private LocalDateTime dateCreated;
+    @ManyToOne
+    private User author;
 }

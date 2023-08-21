@@ -32,6 +32,9 @@ public class UserService implements UserDetailsService{
         newUser.setUsername(userDto.getUsername());
         newUser.setEmail(userDto.getEmail());
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        newUser.setEnabled(false);
+        newUser.setLocked(false);
+        newUser.setRoles("ROLE_USER");
 
         return userRepository.save(newUser);
     }
@@ -59,7 +62,10 @@ public class UserService implements UserDetailsService{
     public void activateUser(int userId){
         User user = userRepository.findById(userId).get();
         user.setEnabled(true);
-        user.setLocked(false);
+        userRepository.save(user);
+    }
+    public void activateUser(User user){
+        user.setEnabled(true);
         userRepository.save(user);
     }
 

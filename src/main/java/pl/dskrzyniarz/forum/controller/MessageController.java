@@ -1,11 +1,14 @@
 package pl.dskrzyniarz.forum.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.dskrzyniarz.forum.entity.Message;
 import pl.dskrzyniarz.forum.entity.Topic;
+import pl.dskrzyniarz.forum.entity.User;
 import pl.dskrzyniarz.forum.repository.MessageRepository;
 import pl.dskrzyniarz.forum.repository.TopicRepository;
 import pl.dskrzyniarz.forum.service.MessageService;
@@ -32,11 +35,13 @@ public class MessageController {
     }
     @PostMapping("/{topicId}/new")
     public String saveMessage(@ModelAttribute Message message,
-                                @PathVariable int topicId){
+                              @PathVariable int topicId,
+                              Authentication authentication){
 
         Topic topic = topicService.getTopic(topicId);
         message.setTopic(topic);
         message.setDateCreated(LocalDateTime.now());
+        message.setAuthor((User)authentication.getPrincipal());
         messageService.saveMessage(message);
         return "redirect:/" + topic.getId();
     }
@@ -54,9 +59,10 @@ public class MessageController {
             return "redirect:/" + existingTopic.getId();
         }
     }
+
     @GetMapping("/message/{messageId}/edit")
     public String showMessageEditForm(Model model,
-                                  @PathVariable int messageId){
+                                      @PathVariable int messageId){
         Message existingMessage = messageService.getMessage(messageId);
         model.addAttribute("message", existingMessage);
         return "message-form-edit";
