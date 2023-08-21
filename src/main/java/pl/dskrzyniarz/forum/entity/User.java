@@ -3,10 +3,13 @@ package pl.dskrzyniarz.forum.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 
 @Data
@@ -22,12 +25,16 @@ public class User implements UserDetails {
     private String password;
     private Boolean locked;
     private Boolean enabled;
+    private String roles;
 
 
 
     @Override
-    public Collection<GrantedAuthority> getAuthorities() {
-        return null;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.stream(
+                roles.split(","))
+                .map(SimpleGrantedAuthority::new)
+                .toList();
     }
 
     @Override

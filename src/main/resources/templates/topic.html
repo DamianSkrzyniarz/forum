@@ -10,7 +10,12 @@
         <h1 th:text="${topic.title}"></h1>
         <table th:each="message : ${topic.messages}" class="table table-striped w-auto">
             <tr>
-                <td th:text="${#temporals.format(message.dateCreated, 'dd-MM-yyyy HH:mm')}"></td>
+                <td>
+                    <p th:text="${message.author.username}">
+                    <p th:text="${#temporals.format(message.dateCreated, 'dd-MM-yyyy HH:mm')}">
+
+
+                </td>
                 <td th:text="${message.body}" class="text-left w-100"></td>
                 <td><a th:href="@{|/message/${message.id}/edit|}">edit</a></td>
                 <td><a th:href="@{|/message/${message.id}/delete|}">delete</a></td>

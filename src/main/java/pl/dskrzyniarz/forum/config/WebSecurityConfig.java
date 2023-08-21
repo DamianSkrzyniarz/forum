@@ -20,7 +20,8 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/","/register").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/new","/*/new").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")

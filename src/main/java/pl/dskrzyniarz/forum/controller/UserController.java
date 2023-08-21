@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import pl.dskrzyniarz.forum.dto.UserDto;
 import pl.dskrzyniarz.forum.entity.Message;
 import pl.dskrzyniarz.forum.entity.Topic;
+import pl.dskrzyniarz.forum.entity.User;
 import pl.dskrzyniarz.forum.service.UserService;
 
 @Controller
@@ -21,6 +22,7 @@ public class UserController {
     public String showLoginForm(Model model){
         return "login-form";
     }
+    
 
     @GetMapping("/register")
     public String showRegisterForm(Model model){
@@ -31,7 +33,8 @@ public class UserController {
 
     @PostMapping("/register")
     public String saveUser(Model model, @ModelAttribute UserDto userDto) {
-        userService.saveUser(userDto);
+        User user = userService.saveUser(userDto);
+        userService.activateUser(user);
         return "redirect:/";
     }
 
