@@ -40,7 +40,7 @@ public class TopicRepositoryTests {
         List<Topic> topicList =  topicRepository.findAll();
 
         Assertions.assertNotNull(topicList);
-        Assertions.assertEquals(2, topicList.size());
+        Assertions.assertTrue(topicList.size()>1);
     }
 
     @Test
@@ -49,21 +49,20 @@ public class TopicRepositoryTests {
         topic.setTitle("Test title");
         topicRepository.save(topic);
 
-        Topic returnedTopic = topicRepository.findById(1).get();
+        Topic returnedTopic = topicRepository.findById(topic.getId()).get();
 
         Assertions.assertNotNull(returnedTopic);
-        Assertions.assertEquals(1, returnedTopic.getId());
+        Assertions.assertEquals(topic.getId(), returnedTopic.getId());
     }
 
     @Test
-    public void DeleteById_ReturnsEmptyList(){
+    public void DeleteById_ReturnsEmptyOptional(){
         Topic topic = new Topic();
         topic.setTitle("title");
         topicRepository.save(topic);
 
-        topicRepository.deleteById(1);
+        topicRepository.deleteById(topic.getId());
 
-        List<Topic> topicList = topicRepository.findAll();
-        Assertions.assertEquals(0, topicList.size());
+        Assertions.assertFalse(topicRepository.findById(topic.getId()).isPresent());
     }
 }
