@@ -1,6 +1,7 @@
 package pl.dskrzyniarz.forum.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import pl.dskrzyniarz.forum.entity.Message;
 import pl.dskrzyniarz.forum.entity.Topic;
+import pl.dskrzyniarz.forum.entity.User;
 import pl.dskrzyniarz.forum.repository.MessageRepository;
 import pl.dskrzyniarz.forum.repository.TopicRepository;
 import pl.dskrzyniarz.forum.service.MessageService;
@@ -48,10 +50,12 @@ public class TopicController {
 
     @PostMapping("/new")
     public String saveTopic(@ModelAttribute Topic topic,
-                              @ModelAttribute Message message){
+                            @ModelAttribute Message message,
+                            Authentication authentication){
         topicService.saveTopic(topic);
         message.setTopic(topic);
         message.setDateCreated(LocalDateTime.now());
+        message.setAuthor((User)authentication.getPrincipal());
         messageService.saveMessage(message);
         return "redirect:/" + topic.getId();
     }
